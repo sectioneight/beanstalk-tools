@@ -13,6 +13,9 @@ def abbrev(code, to=70)
   end
 end
 
+interrupted = false
+trap('SIGINT') { interrupted = true }
+
 loop do
   job = BS.reserve
   code = case job.ybody
@@ -23,4 +26,6 @@ loop do
   end
   puts code
   job.release(job.pri, 60)
+
+  break if interrupted
 end
